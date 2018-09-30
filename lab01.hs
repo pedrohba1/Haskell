@@ -29,6 +29,54 @@ olhaimc imc |imc <= 18.5 = "ganhe peso"
             |imc <= 30.0 = "gordo"
             |otherwise = "muito acima do peso"
 
+media3 a b c = (a + b + c) /2
+
+maior1 :: Int->Int->Int
+maior1 a b = if a >b then a
+else b
+
+maior2 a b 
+ | a>b = a
+ | otherwise = b
+
+
+maior2' :: Int->Int->Int
+maior2' a b = if a >b then a
+             else if b>a then b
+                  else a
+
+maior3 :: Int->Int->Int->Int
+maior3 a b c = if a>b && b>c then a
+               else if a<b && b>c then b
+                    else c
+
+maior3' :: Int->Int->Int->Int
+maior3' a b c
+ | a>b && b>c = a
+ | a<b && b>c = b
+ | otherwise = c
+
+
+maior3'' :: Int->Int->Int->Int
+maior3'' a b c = maior1 (maior1 a b) (maior1 b c)
+
+numRaizes :: Float->Float->Float->Int
+numRaizes a b c 
+ |sqrt(b*b - 4*a*c) > 0.0 = 2
+ |sqrt(b*b - 4*a*c) == 0.0 = 1
+ |otherwise = 0
+ 
+
+misterio2 m n p = not( m==n&&n==p)
+
+
+
+case 3+2+1 of 
+0 -> "zero"
+1 -> "um"
+2 -> "dois"
+3 -> "tres"
+
 
 --guardas
 abs n |n>= 0=  n
