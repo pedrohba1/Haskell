@@ -1,5 +1,4 @@
 
-
 --3:
 double no = no + no
 
@@ -68,15 +67,6 @@ numRaizes a b c
  
 
 misterio2 m n p = not( m==n&&n==p)
-
-
-
-case 3+2+1 of 
-0 -> "zero"
-1 -> "um"
-2 -> "dois"
-3 -> "tres"
-
 
 --guardas
 abs n |n>= 0=  n
