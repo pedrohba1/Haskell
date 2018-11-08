@@ -109,8 +109,10 @@ maiorNatupla a1 a2 a3
 type Ponto = (Float,Float)
 type Reta = (Ponto,Ponto)
 eqReta :: Ponto->Ponto->Reta
-eqReta p q = (p,q)
-
+eqReta (x1,y1) (x2,y2) = (a,b)
+                         where a = (x1-x2)
+                               b = (y1-y2)
+                               m = div y x 
 --20
 rVertical :: Reta->Bool
 rVertical (p,q) = if fst p == fst q then True else False

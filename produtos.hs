@@ -2,7 +2,7 @@ type Nome = String
 type Preco = Int
 type CodBar = Int
 type ListaDeCodigos = [CodBar]
-type Recibo = [(Nome,Preco)]
+type Recibo = [(Nome,Preco)]e
 type BaseDeDados = [(CodBar,Nome,Preco)]
 
 
@@ -26,11 +26,10 @@ formataCentavos p
                    |otherwise = show (div p 100) ++"."++ show (rem p 100)
                    where qntcent =  p `mod` 100
 
-
 formataLinha :: (Nome,Preco) -> String
 formataLinha (a,b) = a ++ (replicate npontos '.') ++" U$"++ formataCentavos b
  where
- npontos = tamLinha - length a - length proc
+ npontos = tamLinha - length x'a - length proc
  proc = formataCentavos b
 
 repete :: Char -> Int -> [Char]
@@ -71,4 +70,4 @@ tamLinha :: Int
 tamLinha = 30
 
 --formataLinha :: (Nome,Preco) -> String 
-
+      

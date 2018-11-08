@@ -16,3 +16,5 @@ concat2 (x:xs) =
 
 
 
+f1 :: Int ->[Int]
+f1 x = [x*2 | x<-[1..x]]	
