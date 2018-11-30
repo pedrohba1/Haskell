@@ -1,53 +1,33 @@
-chain :: Integer -> [Integer]
-chain 1 = [1]
-chain n
- |even n = n : chain (n `div` 2)
- |odd n = n : chain (n*3 + 1) 
 
-numLongChains :: Int
-numLongChains = length (filter (\xs -> length xs >15) (map chain [1..5]))	
+Questão 1:
+func =
+	let
+	 tuplas = [(1,8),(2,5),(0,1),(4,4),(3,2)]
+	 h = (foldr1(+)).map(\(x,y)->x*y-1).filter(\(x,_)-> even x)
+	in h tuplas
 
+	-- 4*4-1  + 0*1 -1 + 2*5 -1
+	-- 9 -1 + 15
+	-- 23
 
---Testando algumas funções sobre cálculo lambda
-zipar :: [Float]
-zipar = zipWith (\a b -> (a*30 +3 ) / b) [1,2,3,4,5] [1,2,3,4,5]
+1.A)	4 funções de alta Ordem :
+	.foldr1
+	.map
+	.filter
+	. "."
 
-
-usandotupla :: [Int]
-usandotupla = map (\(a,b) -> a+b) [(1,2), (3,4)]
-
---escrevendo uma função em cálculo lambda
-addThree :: Int-> Int-> Int-> Int
-addThree  = \x -> \y -> \z -> x + y + z
-
-flip' :: (a -> b -> c) -> b -> a -> c
-flip' f = \x y -> f y x
-	
-flipper :: [[Char]]
-flipper = zipWith (flip (++)) ["te amo", "me ama"] ["eu ", "vc "]
+1.B) [(2,5),(0,1),(4,4)] => 4*4 -1 + 0*1 -1 + 2*5 -1 == 23
 
 
---usando calculo lambda com o fold
-
-somaTodos ::(Num a) => [a] -> a
-somaTodos xs = foldl (\acc x -> acc +x) 0 xs
-
--- ou também:
--- somaTodos = foldl (+) 0
-
-elem' :: Eq a => a -> [a] -> Bool
-elem' _ [] = False
-elem' x (y:ys) = (x==y) || elem x ys
-
---paa a prova : Saber criar um tipo algébrico, e carregar o tipo algébrico)
---saber diferenciar polimorfismo paramétrico de sobrecarregamento
--- saber trabalhar com expressões lambda em uma função
+QUESTÃO 2 -- Eu nao tenho certeza se essa resposta esta certa, alguem confere também por favor!
 
 
-
-
-
-
-
-
-
+polimorfismo Parametrico: É aplicado sobre Tipos Algebricos de Dados (qualquer tipo). A função polimórfica paramétrica não está
+vinculada ao tipo de dado, e sim à estrutura que está sendo passada. 
+Exemplos:
+ head [a] -> a 
+tail [a] -> [a]
+polimorfismo ad-hoc: É aplicado sobre tipos restritos. 
+Exemplos:
+(+) :: Num a => a ->a ->a 
+sum :: Num a => [a] -> a

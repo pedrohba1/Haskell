@@ -11,8 +11,7 @@
 
 --deriv :: Fractional a => (a -> a) -> a -> a -> a
 --deriv f dx = \x -> (f(x + dx) - f(x)) / dx
--- não entendi esse
-
+ -- agora eu entendi
 
 -- > (\(x,y) -> x * y^2) (3,4)
 --retorna 48
@@ -57,8 +56,23 @@ compara (Nome n1, SobreNome s1) (Nome n2, SobreNome s2) = if n1 == n2 && s1 == s
 
 -- questão 3
 
+data Exp a = Val a -- um numero 
+ | Neg (Exp a)
+ | Add (Exp a) (Exp a) -- soma de duas expressoes
+ | Sub (Exp a) (Exp a) -- subtracao
+ | Mul (Exp a) (Exp a) -- multiplicacao
+ | Div (Exp a) (Exp a) -- divisao
+avalia :: Fractional a => Exp a -> a
+avalia (Val x) = x
+avalia (Neg exp) = - (avalia exp)
+avalia (Add exp1 exp2) = (avalia exp1) + (avalia exp2)
+avalia (Sub exp1 exp2) = (avalia exp1) - (avalia exp2)
+avalia (Mul exp1 exp2) = (avalia exp1) * (avalia exp2)
+avalia (Div exp1 exp2) = (avalia exp1) / (avalia exp2)
 
 
+-- é só passar Val junto no parâmetro, assim:
+-- >*main avalia (Add (Val 1) (Val 2))
 
 --questão 9:
 somaQuadPos :: ( Num a) => (Ord a) => [a] -> a
