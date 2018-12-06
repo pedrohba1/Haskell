@@ -100,9 +100,13 @@ filaVazia (t,s,q) = (q == [])
 type EstadoDoServidor = [EstadoDaFila]
 copy n x = take n (repeat x)
 
+
+
 estadoInicialDoServidor :: EstadoDoServidor
 estadoInicialDoServidor = copy nroDeFilas filaDeInicio
- where nroDeFilas = 3
+
+nroDeFilas :: Int
+nroDeFilas = 7 -- é isso que tem que mudar na primeira questão da simulação
 
 tamanhoDoServidor :: EstadoDoServidor -> Int
 tamanhoDoServidor = length
@@ -167,55 +171,61 @@ escalaSequencia a b = map  scala
      denom = div modulo faixa
 
 
-
 geraFuncao :: [(t,Float)] -> (Float -> t)
-
 geraFuncao dist = geraFun dist 0.0
-
 geraFun ((ob,p):dist) nUlt aleat
-     | nProx >= aleat && aleat > nUlt = ob
-     |otherwise = geraFun dist nProx aleat
-                    where
-                       nProx = (p* (fromInteger modulo) + nUlt)
+ | nProx >= aleat && aleat > nUlt = ob
+ |otherwise = geraFun dist nProx aleat
+   where nProx = (p* (fromInteger modulo) + nUlt)
                      
 
+--SIMULAÇÃO:
+simule :: EstadoDoServidor -> ([ClienteQChega] -> [ClienteQSai])
+simule estDoServ (im:messes) = outmesses ++ simule proxEstDoServ messes
+ where (proxEstDoServ,outmesses) = processaSimulacao estDoServ im
+
+seqDeTempos :: [TempoPAtend]                                    
+seqDeTempos = map (geraFuncao dist . fromInteger) (seqAleatoria semente)
+
+entradaDaSimulacao = zipWith Sim [ 1..] seqDeTempos
+
+entradaDaSimulacao2 = take 50 entradaDaSimulacao ++ naos
+
+naos = (Nao:naos)
+
+tempoDeEsperaTotal :: ([ClienteQSai] -> Int)
+tempoDeEsperaTotal = sum . map tempoDEsp
+ where
+    tempoDEsp (Liberado _ w _) = w
+
+--1)R:
+-- considerando nroDefilas = 1
+--   tempoDeEsperaTotal (take 50 (simule estadoInicialDoServidor entradaDaSimulacao2))
+--    com 1 fila = 3358 minutos
+--   R
+
+--2)R: O tempo total de espera será zero à partir de 5 filas nesse caso. 
+      
+--3)R: Para essa questão eu vou precisar alterar a função adicionaNovoObjeto
+--a função simule e a função processa simulação da seguinte maneira:
+--da seguinte maneira:
+
+adicionaNovoObjetoRound :: ClienteQChega -> EstadoDoServidor-> EstadoDoServidor
+adicionaNovoObjetoRound Nao estServ = estServ
+adicionaNovoObjetoRound (Sim tempoDeChegada tempoNecAtend) estServ = colocaNaFila (fazRound tempoDeChegada) (Sim tempoDeChegada tempoNecAtend) estServ
+fazRound n = n `mod` nroDeFilas
+
+processaSimulacaoRound :: EstadoDoServidor -> ClienteQChega -> (EstadoDoServidor,[ClienteQSai])
+processaSimulacaoRound estServ im = (adicionaNovoObjetoRound im estServ1,clientQSai)
+ where (estServ1,clientQSai) = processaServidor estServ
+
+simuleRound :: EstadoDoServidor -> ([ClienteQChega] -> [ClienteQSai])
+simuleRound estDoServ (im:messes) = outmesses ++ simuleRound proxEstDoServ messes
+ where (proxEstDoServ,outmesses) = processaSimulacaoRound estDoServ im
 
 
+-- tempoDeEsperaTotal (take 50 (simuleRound estadoInicialDoServidor entradaDaSimulacao2))
+-- considerando total de filas =1 , tempo total é de 3358 minutos.
+-- O tempo de espera será zero à partir de 7 filas.
 
 
-
-
-
-
-
-
-
-
-
-
-
---vesão do programa em inglês
-
-
-data PersonArrives = No | Yes TimeOfArrival TimeOfAttendance deriving(Eq,Show,Ord)
-
-type TimeOfArrival = Int
-type TimeOfAttendance = Int
-
-data PersonExits = None |Exited TimeOfArrival TimeOfWait TimeOfAttendance deriving(Eq,Show,Ord)
-type TimeOfWait = Int
-
-type QueueState = [PersonArrives]
-
-
-addPerson:: PersonArrives -> QueueState -> QueueState
-addPerson p q
- |p == No = q
- |otherwise = (p:q)
-
-processQueue ::  QueueState -> (QueueState, [PersonExits])
-processQueue q = ([],[])
-
-
-freePerson :: PersonArrives-> [PersonExits] -> PersonExits
-freePerson (Yes time_c time_a) [] = Exited time_c 0 time_a

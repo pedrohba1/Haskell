@@ -104,7 +104,7 @@ adicionaNovoObjeto (Sim tempoDeChegada tempoNecAtend) estServ = colocaNaFila (me
 --adicionaNovoObjeto arranjada para round-robin:
 
 --adicionaNovoObjeto (Sim tempoDeChegada tempoNecAtend) estServ = colocaNaFila (fazRound tempoDeChegada) (Sim tempoDeChegada tempoNecAtend) estServ
-
+  
 --fazRound faz uma inserção circular na lista
 
 --fazRound n = n `mod` nroDeFilas
@@ -116,8 +116,7 @@ estadoInicialDoServidor :: EstadoDoServidor
 
 estadoInicialDoServidor = copy nroDeFilas filaDeInicio
 
-nroDeFilas :: Int
-nroDeFilas = 4
+
 
 --Função que eu fiz
 copy :: Int -> EstadoDaFila -> EstadoDoServidor
@@ -219,9 +218,10 @@ tempoDeEsperaTotal = sum . map tempoDEsp
 --2) O numero de caixas necessario para que caia para 0 é:
 --   5 caixas    
 
---3)
+--3) 
 --   a)Resultado com 1 fila : 3358 
 --   b)O numero necessario de caixas é: 7 caixas 
+
            
 --4)
 --

@@ -51,3 +51,7 @@ leDadosList h =
   else do y <- hGetLine h
           resto <-leDadosList h
           return ((read y): resto)
+
+
+
+data Shape = Circle Float Float Float | Rectangle Float Float 
