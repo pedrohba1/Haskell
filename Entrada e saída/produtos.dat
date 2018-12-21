@@ -1,0 +1,2 @@
+Prod {nome = "p", preco = 2, cBarra = 111, qntd = 0}
+Prod {nome = "q", preco = 20, cBarra = 1111, qntd = 0}
