@@ -13,10 +13,8 @@ enfileira :: Int -> Fila -> Fila
 enfileira a x = x ++ [a]
 desenfileira :: Fila -> (Int,Fila)
 desenfileira x
- | not (estaVazia x) = (head x,tail x)
- | otherwise = error "erro: a fila esta vazia"
-
-
+ |not (estaVazia x) = (head x,tail x)
+ |otherwise = error "erro: a fila esta vazia"
 
 
 -- Implementação 2:
@@ -100,13 +98,11 @@ filaVazia (t,s,q) = (q == [])
 type EstadoDoServidor = [EstadoDaFila]
 copy n x = take n (repeat x)
 
-
-
 estadoInicialDoServidor :: EstadoDoServidor
 estadoInicialDoServidor = copy nroDeFilas filaDeInicio
 
 nroDeFilas :: Int
-nroDeFilas = 7 -- é isso que tem que mudar na primeira questão da simulação
+nroDeFilas = 4 -- é isso que tem que mudar na primeira questão da simulação
 
 tamanhoDoServidor :: EstadoDoServidor -> Int
 tamanhoDoServidor = length
@@ -120,7 +116,6 @@ processaServidor [] = ([],[])
 processaServidor (q:qs) = ((nq:nqs), mess ++ messes)
  where (nq,mess) = processaFila q
        (nqs,messes) = processaServidor qs
-
 
 
 processaSimulacao :: EstadoDoServidor -> ClienteQChega -> (EstadoDoServidor,[ClienteQSai])
@@ -157,19 +152,16 @@ proxNumAleat n = (multiplicador*n + incremento) `rem` modulo
 seqAleatoria :: (Integer -> [Integer])
 seqAleatoria semente = iterate (proxNumAleat) semente
 
-
 dist :: Num t => [(t, Float)]
                          
 dist = [(1,0.2),(2,0.25),(3,0.25),(4,0.15),(5,0.1),(6,0.05)]
                      
-
 escalaSequencia :: Integer-> Integer-> ([Integer] -> [Integer])
 escalaSequencia a b = map  scala 
  where
      scala n = (div n denom) + a
      faixa = b - a + 1 
      denom = div modulo faixa
-
 
 geraFuncao :: [(t,Float)] -> (Float -> t)
 geraFuncao dist = geraFun dist 0.0
@@ -178,7 +170,6 @@ geraFun ((ob,p):dist) nUlt aleat
  |otherwise = geraFun dist nProx aleat
    where nProx = (p* (fromInteger modulo) + nUlt)
                      
-
 --SIMULAÇÃO:
 simule :: EstadoDoServidor -> ([ClienteQChega] -> [ClienteQSai])
 simule estDoServ (im:messes) = outmesses ++ simule proxEstDoServ messes
@@ -202,13 +193,11 @@ tempoDeEsperaTotal = sum . map tempoDEsp
 -- considerando nroDefilas = 1
 --   tempoDeEsperaTotal (take 50 (simule estadoInicialDoServidor entradaDaSimulacao2))
 --    com 1 fila = 3358 minutos
---   R
 
 --2)R: O tempo total de espera será zero à partir de 5 filas nesse caso. 
       
 --3)R: Para essa questão eu vou precisar alterar a função adicionaNovoObjeto
 --a função simule e a função processa simulação da seguinte maneira:
---da seguinte maneira:
 
 adicionaNovoObjetoRound :: ClienteQChega -> EstadoDoServidor-> EstadoDoServidor
 adicionaNovoObjetoRound Nao estServ = estServ
@@ -227,5 +216,15 @@ simuleRound estDoServ (im:messes) = outmesses ++ simuleRound proxEstDoServ messe
 -- tempoDeEsperaTotal (take 50 (simuleRound estadoInicialDoServidor entradaDaSimulacao2))
 -- considerando total de filas =1 , tempo total é de 3358 minutos.
 -- O tempo de espera será zero à partir de 7 filas.
+
+
+
+--4) Redefinindo EstadoDoServidor com um alimentador de filas.
+type EstadoDoServidor2 = ([EstadoDaFila], EstadoDaFila)
+
+tamanhoDoServidor2 :: EstadoDoServidor2 -> Int
+tamanhoDoServidor2 = length . fst
+
+
 
 
