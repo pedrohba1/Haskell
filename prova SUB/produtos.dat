@@ -1,0 +1,4 @@
+Prod {nome = "feijao", preco = 30, codigo = 25010, qnt = 0}
+Prod {nome = "rola", preco = 30, codigo = 3212, qnt = 0}
+Prod {nome = "suco e laranja", preco = 20, codigo = 1110110, qnt = 3}
+Prod {nome = "ferramenta", preco = 30, codigo = 1001010, qnt = 1}

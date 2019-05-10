@@ -1,70 +1,91 @@
-import Data.Char 
+--aluno: Pedro Henrique Bufulin de Almeida
+-- matrícula : 121711BCC028 
 
---função que recebe uma lista e retorna uma lista de caracteres:
-retornalista :: String -> [String]
-retornalista [] = []
-retornalista l = map (:[]) l
+import System.IO
 
-edigito :: [String] -> [[Bool]]
-edigito  x = map (map isDigit) x
+--1)
+import Data.Char
 
-maisc :: [String] -> [String]
-maisc [] = []
-maisc(l:ls) = (map (toUpper) l):(maisc ls)
+--a)
+minusc1 :: String -> String
+minusc1 [] = []
+minusc1 (x:xs) = toLower x : minusc1 xs
 
-totalchar :: String-> ([String], Int)
-totalchar s = ((retornalista s), length s)
---          esse (a->b->c) é uma função.
---          ou seja. a primeira entrada é uma função que recebe
---			'a' e 'b' como argumentos e retorna c como resultado.
-zipWith' :: (a->b->c) -> [a]->[b] -> [c]
-zipWith' _ [] _ = []
-zipWith' _ _ [] = []
-zipWith' f (x:xs) (y:ys) = f x y : zipWith' f xs ys
+--b)
+minusc2 :: String -> String
+minusc2 [] = []
+minusc2 (x:xs)
+ | isAlpha x = minusc1 ([x] ++ minusc2 xs)
+ | otherwise = minusc1 (minusc2 xs)
 
 
-flip' :: (a->b->c) ->(b->a->c)
-flip' f = g
- where g x y = f y x 
+--c)
+minusc3 :: String -> String
+minusc3 x = filter  (isAlpha) (map (toLower) x)
 
-map' :: (a->b)-> [a] -> [b]
-map' _ [] = []
-map' f (x:xs) = f x :  map' f  xs
+--d)
+quant :: String -> (String, Int)
+quant x = (x, length (filter (isAlpha) x) )
 
+--2)
+data Produto = Prod { nome :: String , preco :: Int , codigo :: Int , qnt :: Int} deriving (Eq,Show,Ord)
 
-quicksort :: (Ord a) => [a] -> [a]
-quicksort [] = []
-quicksort (x:xs) = 
-     let smallerOrequal = filter (<=x) xs
-         larger = filter  (>x) xs
-     in quicksort smallerOrequal ++ [x] ++ quicksort larger 
+escreveDados :: IO ()
+escreveDados  = 
+ do
+ putStrLn "Escreva quantos produtos você quer armazenar no arquivo: "
+ x <- getLine
+ putStrLn "Escrevendo em arquivo ..."
+ h <- openFile "produtos.dat" WriteMode
+ escreveDadosEmArquivo (read x)  h
+ hClose h
 
+escreveDadosEmArquivo :: Int -> Handle -> IO ()
+escreveDadosEmArquivo n h
+ | n == 0 = return ()
+ | otherwise =
+ do
+ putStrLn "Digite o nome do produto"
+ l <- getLine
+ putStrLn "Digite o preço do produto"
+ p <- getLine
+ putStrLn "digite o código de barras do produto"
+ c <- getLine
+ putStrLn "digite a quantidde de itens desse produto"
+ q <- getLine
+ hPutStrLn h ( show (Prod   l (read p) (read c) (read q)))
+ escreveDadosEmArquivo (n-1) h
 
--- sequencia de collatz
-chain :: Integer -> [Integer]
-chain 1  = [1]
-chain n
- | even n = n: chain ( n `div` 2)
- | odd n = n: chain (3 *n + 1)
+leDados :: String -> IO ()
+leDados f =
+ do
+ h <- openFile f ReadMode
+ x <- leDadosDeArquivo h
+ putStrLn "produtos que não estão no estoque"
+ putStrLn (show ( inexistente x))
+ putStrLn "quantidade de produtos que não estão em estoque"
+ putStrLn (show (quantos x))
+ hClose h
 
-numLong :: Int
-numLong = length ( filter isLong (map chain [1..100]))
- where isLong xs = length xs > 15
+leDadosDeArquivo :: Handle -> IO [Produto]
+leDadosDeArquivo h =
+ do
+ x <- hIsEOF h
+ if x
+ then return []
+ else do
+      y <- hGetLine h
+      putStrLn y
+      leDadosDeArquivo h
 
---função "sum" 
-sum' :: (Num a) => [a] -> a
-sum' xs = foldl (\acc x -> acc +x) 0 xs
+-- função que calcula quais produtos que não existem em produtos.dat
+inexistente :: [Produto] -> [Produto]
+inexistente [] = []
+inexistente ( _ _ _  qnt):xs
+ | qnt == 0 = ( _ _ _ qnt): (inexistente xs)
+ | otherwise = inexistente xs
 
---aqui vão várias funções que usam fold pra fazer as coisas:
---função map só que começando pela direita:
-mapr :: (a->b) -> [a]-> [b]
-mapr f xs = foldr (\x acc -> f x : acc )  [] xs
+-- função que calcula quantos produtos não existem
+quantos :: [Produto] -> Int
+quantos x = length (inexistente x)
 
---implementando a função map usando o foldl
-mapl :: ( a -> b ) -> [a] -> [b]
-mapl f xs = foldl (\acc x -> acc ++ [f x]) [] xs
-
-separa :: String -> [(Char, Int)]
-separa [] = []
-separa (x:xs) = (x, tam+1): separa ((drop tam) xs)
- where tam = length (takeWhile (==x) xs)

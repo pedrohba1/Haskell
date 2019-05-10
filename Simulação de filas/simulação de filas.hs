@@ -16,7 +16,6 @@ desenfileira x
  |not (estaVazia x) = (head x,tail x)
  |otherwise = error "erro: a fila esta vazia"
 
-
 -- Implementação 2:
 enfileira' :: Int-> Fila -> Fila
 enfileira' a x = (a:x)
@@ -59,7 +58,6 @@ desenfileira1 ([],r) = desenfileira1 (reverse r,[])
 -- no início. Ou seja, o primeiro da fila é o último da lista.
 -- Na hora de desenfileirar, a lista é invertida e em seguida é removido o primeiro dessa lista invertida
 -- que seria o próximo da fila na realidade.
-
 
 data ClienteQChega = Nao | Sim TempoQchegou TempoPAtend deriving(Eq,Show,Ord)
 type TempoPAtend = Int
@@ -145,7 +143,6 @@ incremento = 13849
 modulo :: Integer
 modulo = 65536
 
-
 proxNumAleat :: Integer -> Integer
 proxNumAleat n = (multiplicador*n + incremento) `rem` modulo
 
@@ -201,7 +198,9 @@ tempoDeEsperaTotal = sum . map tempoDEsp
 
 adicionaNovoObjetoRound :: ClienteQChega -> EstadoDoServidor-> EstadoDoServidor
 adicionaNovoObjetoRound Nao estServ = estServ
-adicionaNovoObjetoRound (Sim tempoDeChegada tempoNecAtend) estServ = colocaNaFila (fazRound tempoDeChegada) (Sim tempoDeChegada tempoNecAtend) estServ
+adicionaNovoObjetoRound (Sim tempoDeChegada tempoNecAtend) estServ = colocaNaFila (fazRound tempoDeChegada)
+
+ (Sim tempoDeChegada tempoNecAtend) estServ
 fazRound n = n `mod` nroDeFilas
 
 processaSimulacaoRound :: EstadoDoServidor -> ClienteQChega -> (EstadoDoServidor,[ClienteQSai])
@@ -216,7 +215,6 @@ simuleRound estDoServ (im:messes) = outmesses ++ simuleRound proxEstDoServ messe
 -- tempoDeEsperaTotal (take 50 (simuleRound estadoInicialDoServidor entradaDaSimulacao2))
 -- considerando total de filas =1 , tempo total é de 3358 minutos.
 -- O tempo de espera será zero à partir de 7 filas.
-
 
 
 --4) Redefinindo EstadoDoServidor com um alimentador de filas.
